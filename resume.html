@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Riya Bhosale - Spotify Style Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* General Reset */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    color: #fff;
+    overflow-x: hidden;
+  }
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* Sidebar - Glassmorphism */
+  .sidebar {
+    width: 280px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(12px);
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-right: 1px solid rgba(255,255,255,0.1);
+  }
+  .sidebar img {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border: 4px solid #1db954;
+    box-shadow: 0 0 25px #1db954;
+    margin-bottom: 15px;
+    animation: floatPic 3s ease-in-out infinite;
+  }
+  @keyframes floatPic {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  .sidebar h2 { font-size: 24px; color: #1db954; }
+  .muted { color: #aaa; font-size: 14px; margin: 4px 0; }
+  .muted a { color: #1db954; text-decoration: none; }
+  .muted a:hover { text-decoration: underline; }
+  .btn {
+    background: linear-gradient(45deg,#1db954,#1ed760);
+    color: #000;
+    padding: 10px 22px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 15px;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .btn:hover { transform: scale(1.05); box-shadow: 0 0 15px #1ed760; }
+
+  .nav {
+    margin-top: 30px;
+    width: 100%;
+  }
+  .nav button {
+    background: none;
+    border: 0;
+    color: #aaa;
+    text-align: left;
+    padding: 12px;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-size: 16px;
+  }
+  .nav button.active, .nav button:hover {
+    color: #fff;
+    background: rgba(29, 185, 84, 0.3);
+    backdrop-filter: blur(5px);
+  }
+
+  /* Main content */
+  .main {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+    position: relative;
+  }
+  .section { display: none; animation: fadeIn 0.6s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
+
+  /* Cards - Glass + Hover */
+  .card {
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    border-radius: 15px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+  }
+  .card:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+  }
+  .card a { text-decoration: none; color: #fff; display: block; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+  }
+
+  /* Skills */
+  .skill { margin: 18px 0; }
+  .skill-name { margin-bottom: 8px; font-weight: 500; }
+  .progress {
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    height: 14px;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg,#1db954,#1ed760);
+    width: 0;
+    animation: load 2s forwards;
+  }
+  @keyframes load { from { width:0; } to { width: var(--level); } }
+
+  /* Footer Player */
+  .player {
+    position: fixed;
+    bottom: 0;
+    left: 280px;
+    right: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(10px);
+    padding: 12px 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.8);
+  }
+  .player img { width: 60px; height: 60px; border-radius: 12px; }
+
+  /* Home Hero */
+  .hero {
+    text-align: center;
+    margin-top: 50px;
+    position: relative;
+    z-index: 1;
+  }
+  .hero h1 { font-size: 48px; margin-bottom: 10px; color: #1db954; }
+  .hero h2 { font-size: 22px; color: #fff; min-height:28px; }
+  .typing { border-right: .15em solid #1ed760; white-space: nowrap; overflow: hidden; }
+
+  /* Counters */
+  .counters {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 40px;
+  }
+  .counter-box {
+    text-align: center;
+    background: rgba(0,0,0,0.4);
+    padding: 20px 30px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+  }
+  .counter-box .number {
+    font-size: 32px;
+    color: #1db954;
+    font-weight: bold;
+  }
+  .counter-box .label { color: #aaa; margin-top: 5px; }
+
+  /* Floating Particles */
+  .particles {
+    position: absolute;
+    top:0; left:0; right:0; bottom:0;
+    z-index:0;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    background: rgba(29,185,84,0.6);
+    border-radius: 50%;
+    opacity: 0.7;
+    animation: floatParticle linear infinite;
+  }
+  @keyframes floatParticle {
+    0% { transform: translateY(100vh) scale(0.5); }
+    100% { transform: translateY(-10vh) scale(1); }
+  }
+
+  /* Responsive */
+  @media(max-width:900px){
+    body { flex-direction: column; }
+    .sidebar { width: 100%; flex-direction: row; overflow-x: auto; padding: 15px; border-right: none; }
+    .sidebar img { width: 80px; height: 80px; margin-right: 15px; }
+    .nav { flex-direction: row; margin-top:0; }
+    .nav button { margin-right: 8px; }
+    .player { left: 0; }
+  }
+</style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <img src="https://via.placeholder.com/150x150.png?text=Riya" alt="Profile Picture">
+    <div>
+      <h2>Riya Bhosale</h2>
+      <div class="muted">Consultant | 📍 Mumbai</div>
+      <div class="muted">📞 <a href="tel:+917304166981">+91 7304166981</a></div>
+      <div class="muted">✉️ <a href="mailto:riabhosle4@gmail.com">riabhosle4@gmail.com</a></div>
+      <div class="muted">🔗 <a href="https://www.linkedin.com/in/riya-bhosale-916853257/" target="_blank">LinkedIn</a></div>
+      <a href="resume.pdf" download class="btn">⬇ Download Resume</a>
+    </div>
+    <nav class="nav">
+      <button onclick="showSection('home')" class="active">🏠 Home</button>
+      <button onclick="showSection('projects')">📂 Projects</button>
+      <button onclick="showSection('skills')">💡 Skills</button>
+      <button onclick="showSection('about')">👤 About</button>
+      <button onclick="showSection('contact')">📬 Contact</button>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <section id="home" class="section active">
+      <div class="particles" id="particles"></div>
+      <div class="hero">
+        <h1>Riya Bhosale</h1>
+        <h2 class="typing" id="typing"></h2>
+      </div>
+      <div class="counters">
+        <div class="counter-box">
+          <div class="number" data-target="5">0</div>
+          <div class="label">Projects Completed</div>
+        </div>
+        <div class="counter-box">
+          <div class="number" data-target="1">0</div>
+          <div class="label">Years Experience</div>
+        </div>
+        <div class="counter-box">
+          <div class="number" data-target="5">0</div>
+          <div class="label">Clients Worked With</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="section">
+      <h2>Projects</h2>
+      <div class="grid">
+        <div class="card">
+          <a href="https://github.com/example/loan-prediction" target="_blank">
+            <h3>Loan Prediction - Predictive Analysis</h3>
+            <p class="muted">Mar 2025 - Jun 2025</p>
+          </a>
+        </div>
+        <div class="card">
+          <a href="https://github.com/example/yoga-pose-detector" target="_blank">
+            <h3>Yoga Pose Detector</h3>
+            <p class="muted">Mar 2025 - Jun 2025</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills" class="section">
+      <h2>Skills</h2>
+      <div class="skill"><div class="skill-name">Python</div><div class="progress"><div class="progress-bar" style="--level:90%"></div></div></div>
+      <div class="skill"><div class="skill-name">Machine Learning</div><div class="progress"><div class="progress-bar" style="--level:85%"></div></div></div>
+      <div class="skill"><div class="skill-name">Gen AI</div><div class="progress"><div class="progress-bar" style="--level:80%"></div></div></div>
+      <div class="skill"><div class="skill-name">Data Science</div><div class="progress"><div class="progress-bar" style="--level:85%"></div></div></div>
+      <div class="skill"><div class="skill-name">HTML & CSS</div><div class="progress"><div class="progress-bar" style="--level:75%"></div></div></div>
+    </section>
+
+    <section id="about" class="section">
+      <h2>About Me</h2>
+      <p>B.Tech in Computer Science and Engineering (AI & ML). I specialize in Data Science Implementation, AI/ML solutions, Python scripting, and automation with strong foundations in process optimization.</p>
+    </section>
+
+    <section id="contact" class="section">
+      <h2>Contact Me</h2>
+      <p>Email: <a href="mailto:riabhosle4@gmail.com">riabhosle4@gmail.com</a></p>
+      <p>Phone: <a href="tel:+917304166981">+91 7304166981</a></p>
+      <p>LinkedIn: <a href="https://www.linkedin.com/in/riya-bhosale-916853257/" target="_blank">View Profile</a></p>
+      <p>GitHub: <a href="https://github.com/example" target="_blank">My GitHub</a></p>
+    </section>
+  </main>
+
+  <!-- Footer Player -->
+  <div class="player">
+    <img src="https://via.placeholder.com/100x100?text=Project" alt="cover">
+    <div>
+      <div class="title">Featured Project</div>
+      <div class="muted">Loan Prediction - Predictive Analysis</div>
+    </div>
+    <a href="https://github.com/example/loan-prediction" target="_blank" class="btn">View</a>
+  </div>
+
+  <script>
+    // Section switching
+    function showSection(id){
+      document.querySelectorAll('.section').forEach(sec=>sec.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.nav button').forEach(btn=>btn.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    // Typing animation
+    const typingElement = document.getElementById('typing');
+    const words = ["Consultant", "Data Scientist", "AI/ML Enthusiast", "Automation Expert"];
+    let i = 0, j = 0, currentWord = '', isDeleting=false;
+    function type(){
+      if(i>=words.length) i=0;
+      currentWord = words[i];
+      if(isDeleting){
+        typingElement.textContent = currentWord.substring(0,j--);
+        if(j<0){ isDeleting=false; i++; j=0; }
+      } else {
+        typingElement.textContent = currentWord.substring(0,j++);
+        if(j>currentWord.length){ isDeleting=true; j=currentWord.length; }
+      }
+      setTimeout(type, isDeleting?100:200);
+    }
+    type();
+
+    // Counter animation
+    const counters = document.querySelectorAll('.number');
+    counters.forEach(counter=>{
+      const updateCount = ()=>{
+        const target = +counter.getAttribute('data-target');
+        const count = +counter.innerText;
+        const increment = target/100;
+        if(count < target){
+          counter.innerText = Math.ceil(count + increment);
+          setTimeout(updateCount, 30);
+        } else { counter.innerText = target; }
+      };
+      updateCount();
+    });
+
+    // Generate particles
+    const particlesContainer = document.getElementById('particles');
+    for(let k=0;k<30;k++){
+      const particle = document.createElement('div');
+      particle.classList.add('particle');
+      particle.style.width = `${Math.random()*6+4}px`;
+      particle.style.height = particle.style.width;
+      particle.style.left = `${Math.random()*100}%`;
+      particle.style.animationDuration = `${Math.random()*10+5}s`;
+      particlesContainer.appendChild(particle);
+    }
+  </script>
+</body>
+</html>
